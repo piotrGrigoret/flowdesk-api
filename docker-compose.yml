@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: flowdesk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: flowdesk
+      POSTGRES_USER: flowdesk
+      POSTGRES_PASSWORD: flowdesk
+    ports:
+      - "5432:5432"
+    volumes:
+      - flowdesk-postgres-data:/var/lib/postgresql
+
+  redis:
+    image: redis:8
+    container_name: flowdesk-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - flowdesk-redis-data:/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: flowdesk-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@flowdesk.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - flowdesk-pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  flowdesk-postgres-data:
+  flowdesk-redis-data:
+  flowdesk-pgadmin-data:
