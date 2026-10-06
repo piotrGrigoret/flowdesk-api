@@ -4,9 +4,10 @@ import {
   createUser,
   findAllUsers,
   type User,
+  type PublicUser,
 } from './users.repository.js';
 
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<PublicUser[]> => {
   return findAllUsers();
 };
 

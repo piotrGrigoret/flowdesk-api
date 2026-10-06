@@ -24,6 +24,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
       data.password,
     );
 
-    return reply.status(201).send(user);
+    const { password_hash, ...safeUser } = user;
+    return reply.status(201).send(safeUser);
   });
 };

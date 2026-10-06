@@ -8,12 +8,18 @@ export type User = {
   updated_at: Date;
 };
 
-export const findAllUsers = async (): Promise<User[]> => {
-  const result = await db.query<User>(`
+export type PublicUser = {
+  id: string;
+  email: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export const findAllUsers = async (): Promise<PublicUser[]> => {
+  const result = await db.query<PublicUser>(`
     SELECT
       id,
       email,
-      password_hash,
       created_at,
       updated_at
     FROM users
