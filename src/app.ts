@@ -2,12 +2,38 @@ import Fastify from 'fastify';
 
 import { db } from './db/postgre.js';
 import { redis } from './redis/redis.js';
-
+import { z } from 'zod';
 import { usersRoutes } from './users/users.route.js';
 
 export const buildApp = () => {
   const app = Fastify({
     logger: true,
+  });
+
+  app.setErrorHandler(function (error, request, reply) {
+    app.log.error(error);
+
+    if (error instanceof z.ZodError) {
+      return reply.status(400).send({
+        error: 'Validation Error',
+        details: error.issues,
+      });
+    }
+
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === '23505'
+    ) {
+      return reply.status(409).send({
+        error: 'Email already exists',
+      });
+    }
+
+    reply.status(500).send({
+      error: 'Internal Server Error',
+    });
   });
 
   app.register(usersRoutes);
