@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { usersRoutes } from './users/users.route.js';
 import { ZodTypeProvider, validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
 
+
+
 export const buildApp = () => {
   const app = Fastify({
     logger: {
