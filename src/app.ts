@@ -4,11 +4,16 @@ import { db } from './db/postgre.js';
 import { redis } from './redis/redis.js';
 import { z } from 'zod';
 import { usersRoutes } from './users/users.route.js';
+import { ZodTypeProvider, validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
 
 export const buildApp = () => {
   const app = Fastify({
     logger: true,
-  });
+  }).withTypeProvider<ZodTypeProvider>();
+
+  app.setValidatorCompiler(validatorCompiler);
+  
+  app.setSerializerCompiler(serializerCompiler);
 
   app.setErrorHandler(function (error, request, reply) {
     app.log.error(error);

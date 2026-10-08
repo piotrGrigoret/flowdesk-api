@@ -4,11 +4,18 @@ import {
   createUser,
   findAllUsers,
   type User,
-  type PublicUser,
 } from './users.repository.js';
 
-export const getUsers = async (): Promise<PublicUser[]> => {
-  return findAllUsers();
+import type { UserResponse } from './users.schema.js';
+
+export const getUsers = async (): Promise<UserResponse[]> => {
+  const users = await findAllUsers();
+
+  return users.map((user) => ({
+    ...user,
+    created_at: user.created_at.toISOString(),
+    updated_at: user.updated_at.toISOString(),
+  }));
 };
 
 export const registerUser = async (

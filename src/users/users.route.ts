@@ -5,6 +5,7 @@ import {
     getUsers,
     registerUser
  } from './users.service.js';
+import { userResponseSchema } from './users.schema.js';
 
 const createUserSchema = z.object({
   email: z.email(),
@@ -12,7 +13,14 @@ const createUserSchema = z.object({
 });
 
 export const usersRoutes = async (app: FastifyInstance) => {
-  app.get('/users', async () => {
+
+  app.get('/users', {
+    schema: {
+      response: {
+        200: z.array(userResponseSchema),
+      },
+    },
+  }, async () => {
     return getUsers();
   });
 
@@ -26,5 +34,6 @@ export const usersRoutes = async (app: FastifyInstance) => {
 
     const { password_hash, ...safeUser } = user;
     return reply.status(201).send(safeUser);
+  
   });
 };
