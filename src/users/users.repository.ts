@@ -1,19 +1,5 @@
 import { db } from '../db/postgre.js';
-
-export type User = {
-  id: string;
-  email: string;
-  password_hash: string;
-  created_at: Date;
-  updated_at: Date;
-};
-
-export type PublicUser = {
-  id: string;
-  email: string;
-  created_at: Date;
-  updated_at: Date;
-};
+import type { User, PublicUser } from './users.model.js';
 
 export const findAllUsers = async (): Promise<PublicUser[]> => {
   const result = await db.query<PublicUser>(`

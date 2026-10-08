@@ -2,11 +2,12 @@ import bcrypt from 'bcrypt';
 
 import {
   createUser,
-  findAllUsers,
-  type User,
+  findAllUsers
 } from './users.repository.js';
 
 import type { UserResponse } from './users.schema.js';
+import type { User } from './users.model.js';
+
 
 export const getUsers = async (): Promise<UserResponse[]> => {
   const users = await findAllUsers();

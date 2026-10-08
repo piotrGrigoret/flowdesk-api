@@ -15,6 +15,7 @@ const createUserSchema = z.object({
 export const usersRoutes = async (app: FastifyInstance) => {
 
   app.get('/users', {
+    preHandler: app.authenticate,
     schema: {
       response: {
         200: z.array(userResponseSchema),
@@ -24,7 +25,9 @@ export const usersRoutes = async (app: FastifyInstance) => {
     return getUsers();
   });
 
-  app.post('/users', async (request, reply) => {
+  app.post('/users', {
+    preHandler: app.authenticate,
+  }, async (request, reply) => {
     const data = createUserSchema.parse(request.body);
 
     const user = await registerUser(
@@ -33,7 +36,7 @@ export const usersRoutes = async (app: FastifyInstance) => {
     );
 
     const { password_hash, ...safeUser } = user;
+
     return reply.status(201).send(safeUser);
-  
   });
 };
