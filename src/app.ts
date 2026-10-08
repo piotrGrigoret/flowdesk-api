@@ -8,7 +8,16 @@ import { ZodTypeProvider, validatorCompiler, serializerCompiler } from 'fastify-
 
 export const buildApp = () => {
   const app = Fastify({
-    logger: true,
+    logger: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'SYS:standard',
+          ignore: 'pid,hostname',
+        },
+      },
+    },
   }).withTypeProvider<ZodTypeProvider>();
 
   app.setValidatorCompiler(validatorCompiler);
