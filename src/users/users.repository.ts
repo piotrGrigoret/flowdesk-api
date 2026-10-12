@@ -7,6 +7,7 @@ export const findAllUsers = async (): Promise<PublicUser[]> => {
     SELECT
       id,
       email,
+      role,
       created_at,
       updated_at
     FROM users
@@ -31,6 +32,7 @@ export const createUser = async (
         id,
         email,
         password_hash,
+        role,
         created_at,
         updated_at
     `,
@@ -42,7 +44,7 @@ export const createUser = async (
 
 export const findUserById = async (id: string): Promise<User | null> => {
   const result = await db.query<User>(
-    `SELECT id, email, password_hash, created_at, updated_at
+    `SELECT id, email, password_hash, role, created_at, updated_at
      FROM users
      WHERE id = $1
      LIMIT 1`,

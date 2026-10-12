@@ -7,6 +7,7 @@ import {
     registerUser
  } from './users.service.js';
 import { userResponseSchema } from './users.schema.js';
+import { requireAdmin } from '../auth/authorization.js';
 
 const createUserSchema = z.object({
   email: z.email(),
@@ -16,11 +17,12 @@ const createUserSchema = z.object({
 const userIdParamsSchema = z.object({
   id: z.uuid(),
 });
-
 export const usersRoutes = async (app: FastifyInstance) => {
 
   app.get('/users', {
     preHandler: app.authenticate,
+// для примера потом уберем
+    onRequest: requireAdmin,
     schema: {
       response: {
         200: z.array(userResponseSchema),

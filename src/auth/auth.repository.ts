@@ -10,6 +10,7 @@ export const findUserByEmail = async (
         id,
         email,
         password_hash,
+        role,
         created_at,
         updated_at
       FROM users

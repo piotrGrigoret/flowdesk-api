@@ -3,11 +3,12 @@ import {InvalidCredentialsError} from '../errors/app.auth.error.js';
 import {
   findUserByEmail,
 } from './auth.repository.js';
+import { UserRole } from '../users/users.model.js';
 
 export const loginUser = async (
      email: string, 
      password: string,
-     signToken: (payload: { sub: string; email: string }) => string
+     signToken: (payload: { sub: string; email: string; role:UserRole; }) => string
 ) => {
 
     const user = await findUserByEmail(email);
@@ -27,6 +28,7 @@ export const loginUser = async (
     const accessToken = signToken({
         sub: user.id,
         email: user.email,
+        role: user.role
     });
 
     return {
