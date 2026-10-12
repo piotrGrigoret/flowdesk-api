@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { 
     getUsers,
+    getUserById,
     registerUser
  } from './users.service.js';
 import { userResponseSchema } from './users.schema.js';
@@ -10,6 +11,10 @@ import { userResponseSchema } from './users.schema.js';
 const createUserSchema = z.object({
   email: z.email(),
   password: z.string().min(8),
+});
+
+const userIdParamsSchema = z.object({
+  id: z.uuid(),
 });
 
 export const usersRoutes = async (app: FastifyInstance) => {
@@ -23,6 +28,31 @@ export const usersRoutes = async (app: FastifyInstance) => {
     },
   }, async () => {
     return getUsers();
+  });
+
+  app.get('/users/:id', {
+    onRequest: app.authenticate,
+    schema: {
+      params: userIdParamsSchema,
+      response: {
+        200: userResponseSchema,
+        404: z.object({
+          message: z.string(),
+        }),
+      },
+    },
+  }, async (request, reply) => {
+    const { id } = userIdParamsSchema.parse(request.params);
+
+    const user = await getUserById(id);
+
+    if (!user) {
+      return reply.status(404).send({
+        message: 'User not found',
+      });
+    }
+
+    return user;
   });
 
   app.post('/users', {

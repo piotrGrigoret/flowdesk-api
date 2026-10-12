@@ -2,7 +2,8 @@ import bcrypt from 'bcrypt';
 
 import {
   createUser,
-  findAllUsers
+  findAllUsers,
+  findUserById
 } from './users.repository.js';
 
 import type { UserResponse } from './users.schema.js';
@@ -26,4 +27,21 @@ export const registerUser = async (
   const passwordHash = await bcrypt.hash(password, 12);
 
   return createUser(email, passwordHash);
+};
+
+export const getUserById = async (
+  id: string,
+): Promise<UserResponse | null> => {
+  const user = await findUserById(id);
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+    created_at: user.created_at.toISOString(),
+    updated_at: user.updated_at.toISOString(),
+  };
 };

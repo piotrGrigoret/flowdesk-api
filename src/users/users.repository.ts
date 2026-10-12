@@ -1,3 +1,4 @@
+import { Pool } from 'pg';
 import { db } from '../db/postgre.js';
 import type { User, PublicUser } from './users.model.js';
 
@@ -37,4 +38,16 @@ export const createUser = async (
   );
 
   return result.rows[0];
+};
+
+export const findUserById = async (id: string): Promise<User | null> => {
+  const result = await db.query<User>(
+    `SELECT id, email, password_hash, created_at, updated_at
+     FROM users
+     WHERE id = $1
+     LIMIT 1`,
+    [id],
+  );
+
+  return result.rows[0] ?? null;
 };
