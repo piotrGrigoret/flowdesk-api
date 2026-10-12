@@ -7,7 +7,7 @@ import {
 export const loginUser = async (
      email: string, 
      password: string,
-     signToken: (payload: object) => string
+     signToken: (payload: { sub: string; email: string }) => string
 ) => {
 
     const user = await findUserByEmail(email);
