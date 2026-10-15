@@ -20,12 +20,15 @@ const userIdParamsSchema = z.object({
 export const usersRoutes = async (app: FastifyInstance) => {
 
   app.get('/users', {
-    preHandler: app.authenticate,
-// для примера потом уберем
-    onRequest: requireAdmin,
+    onRequest: app.authenticate,
+// временно позже заменим
+    preHandler: requireAdmin,
     schema: {
       response: {
         200: z.array(userResponseSchema),
+        403: z.object({
+          error: z.string(),
+        }),
       },
     },
   }, async () => {
